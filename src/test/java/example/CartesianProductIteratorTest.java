@@ -12,6 +12,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CartesianProductIteratorTest {
 
@@ -34,12 +35,35 @@ class CartesianProductIteratorTest {
     }
 
     @Test
-    @DisplayName("исключение")
+    @DisplayName("исключение при пустом массиве коллекций")
     void CartesianProductIterator_shouldThrowException() {
         List<Collection<Integer>> res = new ArrayList<>();
         CartesianProductIterator<Integer> cartesianProductIterator = new CartesianProductIterator<>(res);
         NoSuchElementException thrown = Assertions.assertThrows(NoSuchElementException.class, cartesianProductIterator::next);
-        Assertions.assertEquals("collection is empty", thrown.getMessage());
+        assertEquals("collection is empty", thrown.getMessage());
+
+    }
+
+    @Test
+    @DisplayName("исключение, если хотя бы 1 коллекция пуста")
+    void CartesianProductIterator_shouldThrowExceptionWhenAtLeastOnCollectionIsEmpty() {
+        List<Collection<Integer>> res = new ArrayList<>();
+        Collection<Integer> first = new HashSet<>(Arrays.asList(1, 2, 6, 9));
+        Collection<Integer> second = Arrays.asList(7, 5, 2);
+        Collection<Integer> third = Arrays.asList();
+
+        res.add(first);
+        res.add(second);
+        res.add(third);
+        NoSuchElementException thrown = Assertions.assertThrows(NoSuchElementException.class, () -> {
+            CartesianProductIterator<Integer> cartesianProductIterator = new CartesianProductIterator<>(res);
+            while (cartesianProductIterator.hasNext()) {
+                System.out.println(cartesianProductIterator.next());
+            }
+        });
+
+        assertEquals("collection is empty", thrown.getMessage());
+
 
     }
 

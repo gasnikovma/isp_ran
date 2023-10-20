@@ -10,11 +10,17 @@ public class CartesianProductIterator<E> implements Iterator<List<E>> {
     public CartesianProductIterator(List<? extends Collection<E>> collections) {
         this.collections = new ArrayList<>(collections.size());
         for (Collection<E> collection : collections) {
-            this.collections.add(new ArrayList<>(collection));
+            if (!collection.isEmpty()) {
+                this.collections.add(new ArrayList<>(collection));
+            } else {
+                throw new NoSuchElementException("collection is empty");
+            }
         }
         this.indices = new int[this.collections.size()];
         this.hasNext = !this.collections.isEmpty();
     }
+
+
 
     @Override
     public boolean hasNext() {
@@ -27,8 +33,10 @@ public class CartesianProductIterator<E> implements Iterator<List<E>> {
             throw new NoSuchElementException("collection is empty");
         }
         List<E> result = new ArrayList<>(indices.length);
+
         for (int i = 0; i < indices.length; i++) {
             result.add(collections.get(i).get(indices[i]));
+
         }
         for (int i = indices.length - 1; i >= 0; i--) {
             if (indices[i] < collections.get(i).size() - 1) {
