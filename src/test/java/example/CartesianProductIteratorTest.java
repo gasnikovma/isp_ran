@@ -43,6 +43,7 @@ class CartesianProductIteratorTest {
 
     }
 
+
     @ParameterizedTest
     @MethodSource("set_provider")
     void CartesianProductIterator_shouldReturnEqualsForSet(Collection<Character> a, Collection<Character> b, Collection<Character> c, List<Set<Character>> answer) {
